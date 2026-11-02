@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinPiece – Bills, Cards &amp; Expenses, Only on Your Phone</title>
+<meta name="description" content="FinPiece keeps your credit card bills, insurance premiums, expenses, money lent, To-Dos and documents in one private app. 100% offline and encrypted. Coming soon on Google Play.">
+<meta name="theme-color" content="#EC4899">
+<link rel="canonical" href="https://finpiece.github.io/">
+<link rel="icon" type="image/png" href="images/icon-64.png">
+<link rel="apple-touch-icon" href="images/icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FinPiece – Your money. Only on your phone.">
+<meta property="og:description" content="Cards, bills, insurance, expenses and money plans in one private, offline app. Coming soon on Google Play.">
+<meta property="og:image" content="https://finpiece.github.io/images/og-image.jpg">
+<meta property="og:url" content="https://finpiece.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<script>
+  // Theme before paint (per-viewer convenience only).
+  (function () {
+    var d = document.documentElement; d.classList.add('js');
+    try { var t = localStorage.getItem('fp-theme'); if (t === 'dark' || t === 'light') d.setAttribute('data-theme', t); } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --bg: #FFF8F0;
+    --bg-2: #FFF1E4;
+    --surface: #FFFFFF;
+    --ink: #2A211B;
+    --ink-2: #5E5149;
+    --muted: #8A7B70;
+    --line: #EFE3D6;
+    --orange: #FF8A3D;
+    --pink: #EC4899;
+    --purple: #8B5CF6;
+    --gold: #C78D3D;
+    --green: #2F9E6B;
+    --blue: #2F86E0;
+    --grad: linear-gradient(120deg, #FF8A3D 0%, #EC4899 50%, #8B5CF6 100%);
+    --grad-soft: linear-gradient(120deg, #FFE3CF 0%, #FCD6E8 50%, #E6DBFF 100%);
+    --shadow: 0 20px 50px -20px rgba(120, 50, 40, .28);
+    --shadow-sm: 0 8px 24px -12px rgba(120, 50, 40, .25);
+    --radius: 24px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15100D; --bg-2: #1C1511; --surface: #241B16; --ink: #F7EEE6; --ink-2: #D3C4B8; --muted: #A8978A;
+      --line: #3A2E26; --grad-soft: linear-gradient(120deg, #3A2318 0%, #3A1A2C 50%, #2A2046 100%);
+      --shadow: 0 20px 50px -20px rgba(0, 0, 0, .7); --shadow-sm: 0 8px 24px -12px rgba(0, 0, 0, .6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15100D; --bg-2: #1C1511; --surface: #241B16; --ink: #F7EEE6; --ink-2: #D3C4B8; --muted: #A8978A;
+    --line: #3A2E26; --grad-soft: linear-gradient(120deg, #3A2318 0%, #3A1A2C 50%, #2A2046 100%);
+    --shadow: 0 20px 50px -20px rgba(0, 0, 0, .7); --shadow-sm: 0 8px 24px -12px rgba(0, 0, 0, .6);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 17px; line-height: 1.6; overflow-x: clip;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  h1, h2, h3 { line-height: 1.15; margin: 0; letter-spacing: -.02em; }
+  .wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 28px; } }
+  .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--pink);
+  }
+  .eyebrow::before { content: ""; width: 22px; height: 3px; border-radius: 3px; background: var(--grad); }
+  .section { padding: 88px 0; position: relative; }
+  .section-head { max-width: 720px; margin: 0 auto 48px; text-align: center; }
+  .section-head h2 { font-size: clamp(30px, 5vw, 48px); font-weight: 800; margin: 12px 0 14px; }
+  .section-head p { color: var(--ink-2); margin: 0; font-size: 18px; }
+  svg.i { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
+    background: color-mix(in srgb, var(--bg) 78%, transparent); border-bottom: 1px solid transparent; transition: border-color .3s;
+  }
+  .nav.scrolled { border-bottom-color: var(--line); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 20px; }
+  .brand img { width: 38px; height: 38px; border-radius: 11px; box-shadow: var(--shadow-sm); }
+  .nav-links { display: none; gap: 26px; font-weight: 600; font-size: 15px; }
+  .nav-links a { text-decoration: none; color: var(--ink-2); }
+  .nav-links a:hover { color: var(--pink); }
+  @media (min-width: 920px) { .nav-links { display: flex; } }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .icon-btn {
+    width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    display: grid; place-items: center; cursor: pointer;
+  }
+  .icon-btn .sun { display: none; }
+  :root[data-theme="dark"] .icon-btn .sun { display: block; }
+  :root[data-theme="dark"] .icon-btn .moon { display: none; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .icon-btn .sun { display: block; }
+    :root:not([data-theme="light"]) .icon-btn .moon { display: none; }
+  }
+  .pill-soon {
+    display: none; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: var(--grad); color: #fff;
+    font-weight: 700; font-size: 14px; text-decoration: none; box-shadow: 0 10px 24px -10px rgba(236, 72, 153, .7);
+  }
+  @media (min-width: 560px) { .pill-soon { display: inline-flex; } }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; padding: 48px 0 40px; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; z-index: 0; pointer-events: none; }
+  .blob.b1 { width: 420px; height: 420px; background: #FF8A3D; top: -120px; left: -140px; }
+  .blob.b2 { width: 460px; height: 460px; background: #EC4899; top: 80px; right: -160px; opacity: .45; }
+  .blob.b3 { width: 380px; height: 380px; background: #8B5CF6; bottom: -160px; left: 30%; opacity: .35; }
+  .hero-grid { position: relative; z-index: 1; display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 980px) { .hero-grid { grid-template-columns: 1.02fr 1fr; gap: 24px; } .hero { padding: 72px 0 64px; } }
+  .badge-soon {
+    display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px 7px 8px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); font-weight: 600; font-size: 14px;
+  }
+  .badge-soon .dot { width: 26px; height: 26px; border-radius: 50%; background: var(--grad); display: grid; place-items: center; color: #fff; }
+  .badge-soon .live { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 0 0 rgba(34, 197, 94, .6); animation: ping 2s infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, .55); } 80%, 100% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } }
+  .hero h1 { font-size: clamp(40px, 7.4vw, 76px); font-weight: 800; margin: 22px 0 18px; }
+  .hero h1 .serif { font-family: "Fraunces", Georgia, serif; font-weight: 700; font-style: italic; letter-spacing: -.01em; }
+  .hero .lead { font-size: clamp(18px, 2.2vw, 21px); color: var(--ink-2); max-width: 560px; margin: 0 0 28px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 30px; padding: 0; list-style: none; }
+  .chips li { padding: 7px 14px; border-radius: 999px; font-weight: 600; font-size: 14px; color: #fff; }
+  .chips li:nth-child(1) { background: #7C5CF6; } .chips li:nth-child(2) { background: #2F86E0; }
+  .chips li:nth-child(3) { background: #2F9E6B; } .chips li:nth-child(4) { background: #F08A24; }
+  .chips li:nth-child(5) { background: #E8467C; } .chips li:nth-child(6) { background: #8A5A2B; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .play-soon {
+    display: inline-flex; align-items: center; gap: 12px; padding: 12px 22px 12px 16px; border-radius: 16px; background: #111;
+    color: #fff; text-decoration: none; box-shadow: var(--shadow); border: 1px solid rgba(255, 255, 255, .12);
+  }
+  .play-soon small { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+  .play-soon strong { display: block; font-size: 19px; line-height: 1.1; }
+  .play-soon .tri { width: 30px; height: 30px; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px; padding: 14px 20px; border-radius: 16px; font-weight: 700; text-decoration: none;
+    background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+  }
+  .btn-ghost:hover { border-color: var(--pink); color: var(--pink); }
+  .android-note { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+
+  .phones { position: relative; height: 560px; max-width: 560px; margin: 0 auto; width: 100%; }
+  .phone {
+    position: absolute; width: 250px; aspect-ratio: 9 / 16; border-radius: 34px; padding: 8px; background: #17110E;
+    box-shadow: 0 40px 80px -30px rgba(90, 30, 60, .55), inset 0 0 0 2px #3A2C24;
+  }
+  .phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 27px; }
+  .phones .p1 { left: 50%; top: 10px; transform: translateX(-50%); z-index: 3; animation: float 6s ease-in-out infinite; }
+  .phones .p2 { left: 0; top: 90px; transform: rotate(-9deg) scale(.86); z-index: 2; animation: float2 7s ease-in-out infinite; }
+  .phones .p3 { right: 0; top: 90px; transform: rotate(9deg) scale(.86); z-index: 2; animation: float3 7.5s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateX(-50%) translateY(-14px); } }
+  @keyframes float2 { 50% { transform: rotate(-9deg) scale(.86) translateY(-12px); } }
+  @keyframes float3 { 50% { transform: rotate(9deg) scale(.86) translateY(-12px); } }
+  .tag-float {
+    position: absolute; z-index: 4; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 16px;
+    background: var(--surface); box-shadow: var(--shadow); font-weight: 700; font-size: 14px; border: 1px solid var(--line);
+  }
+  .tag-float .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; }
+  .tag-float.t1 { left: 2%; bottom: 40px; } .tag-float.t1 .ic { background: #2F9E6B; }
+  .tag-float.t2 { right: 0; top: 18px; } .tag-float.t2 .ic { background: var(--grad); }
+  @media (max-width: 560px) {
+    .phones { height: 470px; }
+    .phone { width: 210px; }
+    .phones .p2 { left: -30px; } .phones .p3 { right: -30px; }
+    .tag-float { font-size: 12px; padding: 8px 10px; } .tag-float .ic { width: 28px; height: 28px; }
+    .tag-float.t1 { left: 0; bottom: 20px; }
+  }
+
+  /* ---------- Stats ---------- */
+  .stats { position: relative; z-index: 2; }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 18px; border-radius: 28px;
+    background: var(--grad); box-shadow: var(--shadow);
+  }
+  @media (min-width: 820px) { .stats-grid { grid-template-columns: repeat(5, 1fr); padding: 22px; } }
+  .stat { background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .22); border-radius: 18px; padding: 16px; color: #fff; }
+  .stat b { display: block; font-size: clamp(24px, 3.2vw, 32px); font-weight: 800; line-height: 1.1; }
+  .stat span { font-size: 14px; opacity: .92; }
+  .stat:last-child { grid-column: 1 / -1; }
+  @media (min-width: 820px) { .stat:last-child { grid-column: auto; } }
+
+  /* ---------- Feature rows ---------- */
+  .feature { display: grid; gap: 36px; align-items: center; padding: 44px 0; }
+  @media (min-width: 900px) {
+    .feature { grid-template-columns: 1fr 1fr; gap: 64px; padding: 56px 0; }
+    .feature.flip .f-visual { order: 2; }
+  }
+  .f-visual { position: relative; display: grid; place-items: center; min-height: 460px; }
+  .f-visual .halo { position: absolute; width: 88%; aspect-ratio: 1; border-radius: 42% 58% 55% 45% / 50% 45% 55% 50%; opacity: .9; animation: morph 14s ease-in-out infinite; }
+  @keyframes morph { 50% { border-radius: 58% 42% 45% 55% / 45% 55% 45% 55%; transform: rotate(8deg); } }
+  .f-visual .phone { position: relative; width: 240px; }
+  .f-visual .phone.small { position: absolute; width: 170px; right: 4%; bottom: 0; transform: rotate(6deg); z-index: 2; }
+  .f-visual .phone.small.left { right: auto; left: 4%; transform: rotate(-6deg); }
+  @media (max-width: 480px) { .f-visual { min-height: 420px; } .f-visual .phone { width: 210px; } .f-visual .phone.small { width: 140px; right: 0; } .f-visual .phone.small.left { left: 0; } }
+  .f-text .num { font-weight: 800; font-size: 14px; letter-spacing: .1em; color: var(--muted); }
+  .f-icon { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; color: #fff; margin: 0 0 18px; box-shadow: var(--shadow-sm); }
+  .f-icon svg.i { width: 28px; height: 28px; }
+  .f-text h3 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; margin: 0 0 12px; }
+  .f-text > p { color: var(--ink-2); margin: 0 0 22px; font-size: 18px; }
+  .ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .ticks li { display: flex; gap: 12px; align-items: flex-start; }
+  .ticks li::before {
+    content: ""; flex: none; width: 24px; height: 24px; margin-top: 2px; border-radius: 8px; background-color: var(--accent, var(--pink));
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='8'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 12.5l3.2 3.2L17 9'/%3E%3C/svg%3E");
+    background-size: 100%;
+  }
+  .c-dash { --accent: #EC4899; } .c-dash .halo, .c-dash .f-icon { background: linear-gradient(135deg, #FF5F6D, #EC4899 60%, #C026D3); }
+  .c-card { --accent: #6D5CF6; } .c-card .halo, .c-card .f-icon { background: linear-gradient(135deg, #8B7CFF, #6D4AE8); }
+  .c-ins { --accent: #2F86E0; } .c-ins .halo, .c-ins .f-icon { background: linear-gradient(135deg, #38BDF8, #2563EB); }
+  .c-exp { --accent: #2F9E6B; } .c-exp .halo, .c-exp .f-icon { background: linear-gradient(135deg, #4ADE80, #15925C); }
+  .c-gg { --accent: #F08A24; } .c-gg .halo, .c-gg .f-icon { background: linear-gradient(135deg, #FDBA4D, #F2711C); }
+  .c-todo { --accent: #D9A400; } .c-todo .halo, .c-todo .f-icon { background: linear-gradient(135deg, #FDE047, #EAB308); }
+  .c-vault { --accent: #8A5A2B; } .c-vault .halo, .c-vault .f-icon { background: linear-gradient(135deg, #C78D3D, #6B4421); }
+  .c-plan { --accent: #9333EA; } .c-plan .halo, .c-plan .f-icon { background: linear-gradient(135deg, #F472B6, #9333EA); }
+  .halo { filter: saturate(1.05); }
+  :root[data-theme="dark"] .halo { opacity: .55 !important; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .halo { opacity: .55 !important; } }
+
+  /* ---------- More grid ---------- */
+  .more { background: var(--bg-2); }
+  .more-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 600px) { .more-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 980px) { .more-grid { grid-template-columns: repeat(4, 1fr); } }
+  .mini {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm);
+    transition: transform .25s, box-shadow .25s;
+  }
+  .mini:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .mini .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; color: #fff; margin-bottom: 14px; }
+  .mini h3 { font-size: 18px; font-weight: 800; margin: 0 0 6px; }
+  .mini p { margin: 0; color: var(--ink-2); font-size: 15px; }
+
+  /* ---------- Gallery ---------- */
+  .gallery { overflow: hidden; padding: 8px 0 24px; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .track { display: flex; gap: 22px; width: max-content; animation: slide 70s linear infinite; }
+  .gallery:hover .track { animation-play-state: paused; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+  .shot { width: 200px; flex: none; }
+  .shot .phone { position: relative; width: 100%; border-radius: 28px; padding: 6px; }
+  .shot .phone img { border-radius: 23px; }
+  .shot figcaption { text-align: center; font-weight: 700; font-size: 14px; margin-top: 12px; color: var(--ink-2); }
+
+  /* ---------- Privacy ---------- */
+  .privacy { background: #1A1210; color: #F7EEE6; overflow: hidden; }
+  .privacy .blob { opacity: .35; }
+  .privacy .section-head p { color: #D3C4B8; }
+  .priv-grid { position: relative; z-index: 1; display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 700px) { .priv-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .priv-grid { grid-template-columns: repeat(3, 1fr); } }
+  .priv { padding: 24px; border-radius: var(--radius); background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1); }
+  .priv .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--grad); color: #fff; margin-bottom: 14px; }
+  .priv h3 { font-size: 19px; margin: 0 0 6px; font-weight: 800; }
+  .priv p { margin: 0; color: #CDBEB2; font-size: 15px; }
+  .privacy .eyebrow { color: #FF9BC4; }
+
+  /* ---------- Money tips ---------- */
+  .tips { background: var(--grad-soft); }
+  .disclaimer {
+    display: flex; gap: 12px; align-items: flex-start; max-width: 860px; margin: 0 auto 40px; padding: 14px 18px; border-radius: 18px;
+    background: var(--surface); border: 1px dashed var(--gold); color: var(--ink-2); font-size: 15px;
+  }
+  .disclaimer svg { color: var(--gold); margin-top: 2px; }
+  .tip-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .tip-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .tip-grid { grid-template-columns: repeat(3, 1fr); } }
+  .tip {
+    position: relative; overflow: hidden; padding: 24px; border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-sm);
+    border: 1px solid var(--line);
+  }
+  .tip .big { font-size: 44px; font-weight: 800; line-height: 1; margin-bottom: 10px; background: var(--tg); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tip h3 { font-size: 19px; font-weight: 800; margin: 0 0 8px; }
+  .tip p { margin: 0; color: var(--ink-2); font-size: 15px; }
+  .tip::after { content: ""; position: absolute; width: 140px; height: 140px; right: -50px; top: -50px; border-radius: 50%; background: var(--tg); opacity: .14; }
+  .tip .inapp { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--bg-2); color: var(--ink-2); }
+  .tg1 { --tg: linear-gradient(135deg, #8B7CFF, #6D4AE8); } .tg2 { --tg: linear-gradient(135deg, #FF5F6D, #E11D48); }
+  .tg3 { --tg: linear-gradient(135deg, #4ADE80, #15925C); } .tg4 { --tg: linear-gradient(135deg, #38BDF8, #2563EB); }
+  .tg5 { --tg: linear-gradient(135deg, #FDBA4D, #F2711C); } .tg6 { --tg: linear-gradient(135deg, #F472B6, #9333EA); }
+  .tg7 { --tg: linear-gradient(135deg, #C78D3D, #8A5A2B); } .tg8 { --tg: linear-gradient(135deg, #2DD4BF, #0F766E); }
+  .tg9 { --tg: linear-gradient(135deg, #FB7185, #EC4899); }
+  .marquee { overflow: hidden; margin-top: 48px; border-radius: 999px; background: var(--grad); color: #fff; font-weight: 700; }
+  .marquee .row { display: flex; gap: 40px; width: max-content; padding: 14px 0; animation: slide 40s linear infinite; white-space: nowrap; }
+  .marquee span::before { content: "✦"; margin-right: 12px; opacity: .8; }
+
+  /* ---------- Pricing ---------- */
+  .price-grid { display: grid; gap: 18px; grid-template-columns: 1fr; max-width: 1000px; margin: 0 auto; }
+  @media (min-width: 860px) { .price-grid { grid-template-columns: repeat(3, 1fr); align-items: stretch; } }
+  .price { padding: 28px; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+  .price h3 { font-size: 20px; font-weight: 800; margin: 0 0 6px; }
+  .price .amt { font-size: 44px; font-weight: 800; line-height: 1.1; margin: 8px 0 4px; }
+  .price .amt small { font-size: 16px; font-weight: 600; color: var(--muted); }
+  .price .sub { color: var(--ink-2); font-size: 15px; margin: 0 0 18px; }
+  .price .ticks { font-size: 15px; gap: 10px; }
+  .price.hot { background: linear-gradient(160deg, #0F3D2E, #14523D 60%, #0F3D2E); color: #FFF7E8; border: 2px solid #D4A845; transform: translateY(-6px); box-shadow: var(--shadow); --accent: #D4A845; }
+  .price.hot .amt { font-family: "Fraunces", Georgia, serif; color: #F3D27A; }
+  .price.hot .sub, .price.hot .amt small { color: #E8DCC2; }
+  .price .tagline { align-self: flex-start; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: #D4A845; color: #1B1206; margin-bottom: 12px; }
+  .c-trial { --accent: #EC4899; } .c-free { --accent: #8A7B70; }
+
+  /* ---------- Languages ---------- */
+  .langs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 900px; margin: 0 auto; padding: 0; list-style: none; }
+  .langs li { padding: 10px 18px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: 18px; box-shadow: var(--shadow-sm); }
+  .langs li:nth-child(4n+1) { border-color: #F9A8D4; } .langs li:nth-child(4n+2) { border-color: #FDBA74; }
+  .langs li:nth-child(4n+3) { border-color: #C4B5FD; } .langs li:nth-child(4n+4) { border-color: #86EFAC; }
+
+  /* ---------- FAQ ---------- */
+  .faq { max-width: 820px; margin: 0 auto; display: grid; gap: 12px; }
+  .faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 4px 22px; box-shadow: var(--shadow-sm); }
+  .faq summary { cursor: pointer; list-style: none; font-weight: 700; font-size: 17px; padding: 16px 32px 16px 0; position: relative; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; border-radius: 50%; background: var(--grad); color: #fff; display: grid; place-items: center; font-size: 20px; line-height: 1; transition: transform .25s; }
+  .faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  .faq details p { margin: 0 0 18px; color: var(--ink-2); }
+
+  /* ---------- Final CTA + footer ---------- */
+  .final { padding: 40px 0 88px; }
+  .final-card { position: relative; overflow: hidden; border-radius: 36px; background: var(--grad); color: #fff; padding: 56px 24px; text-align: center; box-shadow: var(--shadow); }
+  .final-card h2 { font-size: clamp(32px, 5.4vw, 56px); font-weight: 800; margin: 18px 0 12px; }
+  .final-card p { max-width: 560px; margin: 0 auto 28px; font-size: 18px; opacity: .95; }
+  .final-card img.logo { width: 84px; height: 84px; border-radius: 22px; margin: 0 auto; box-shadow: 0 16px 40px -12px rgba(0, 0, 0, .45); }
+  .final-card .cta-row { justify-content: center; }
+  .final-card .btn-ghost { background: rgba(255, 255, 255, .16); color: #fff; border-color: rgba(255, 255, 255, .4); }
+  .final-card .ring { position: absolute; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .18); }
+  footer { border-top: 1px solid var(--line); padding: 36px 0 44px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: grid; gap: 18px; }
+  @media (min-width: 760px) { footer .wrap { grid-template-columns: 1fr auto; align-items: center; } }
+  footer nav { display: flex; flex-wrap: wrap; gap: 18px; font-weight: 600; }
+  footer nav a { text-decoration: none; color: var(--ink-2); }
+  footer nav a:hover { color: var(--pink); }
+  footer .fine { grid-column: 1 / -1; font-size: 12px; }
+
+  /* ---------- Reveal ---------- */
+  .js .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .7, .2, 1); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    .js .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M21 9h-5a3 3 0 0 0 0 6h5V9z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.4 3.4-5 6.5-5s5.7 1.6 6.5 5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 15c1.6.7 2.6 2.4 3 5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.4"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-finger" viewBox="0 0 24 24"><path d="M12 11v3c0 2.5-.6 4.6-1.8 6.5"/><path d="M8.5 7.6A5 5 0 0 1 17 11v2c0 2-.3 3.9-.9 5.6"/><path d="M5 9.5A8 8 0 0 1 19.6 8.5M5.5 13.5c.3-1 .5-1.8.5-2.5 0-.8.2-1.5.5-2.2M8 12c0 2.9-.6 5.4-1.8 7.4M20 12.5c0 1.3-.1 2.6-.4 3.8"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L20 3M16 7l3 3M14 9l2 2"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M2 2l20 20"/><path d="M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 5.2-2.8M19 13a10 10 0 0 0-2.2-1.7M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8A15 15 0 0 0 10.7 5"/><circle cx="12" cy="20" r="1"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14"/></symbol>
+    <symbol id="i-backup" viewBox="0 0 24 24"><path d="M4 7v10c0 1.7 3.6 3 8 3s8-1.3 8-3V7"/><ellipse cx="12" cy="7" rx="8" ry="3"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2L12 3z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3.5v17a1 1 0 0 0 1.5.9l14-8.5a1 1 0 0 0 0-1.8l-14-8.5A1 1 0 0 0 6 3.5z"/></symbol>
+  </defs>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="FinPiece home">
+      <img src="images/icon-192.png" alt="" width="38" height="38">
+      <span>FinPiece</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#features">Features</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#money-tips">Money tips</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch light or dark mode">
+        <svg class="i moon"><use href="#i-moon"/></svg><svg class="i sun"><use href="#i-sun"/></svg>
+      </button>
+      <a class="pill-soon" href="#launch"><svg class="i" style="width:16px;height:16px;fill:#fff;stroke:none"><use href="#i-play"/></svg>Coming soon</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <div class="wrap hero-grid">
+      <div class="reveal">
+        <span class="badge-soon"><span class="dot"><svg class="i" style="width:14px;height:14px;fill:#fff;stroke:none"><use href="#i-play"/></svg></span>Coming soon on Google Play <span class="live" aria-hidden="true"></span></span>
+        <h1>Your money.<br><span class="grad-text">Only on</span> <span class="serif grad-text">your phone.</span></h1>
+        <p class="lead">FinPiece keeps your credit card bills, insurance premiums, daily expenses, money you lend, To-Dos and important documents in one beautiful app. It is 100% offline and encrypted, with no sign-up and no ads.</p>
+        <ul class="chips" aria-label="What FinPiece covers">
+          <li>Credit cards</li><li>Insurance</li><li>Expenses</li><li>Given-got</li><li>To-Do &amp; Doc Vault</li><li>Money plans</li>
+        </ul>
+        <div class="cta-row" id="launch">
+          <a class="play-soon" href="mailto:finpiece.win@gmail.com?subject=Tell%20me%20when%20FinPiece%20is%20on%20Google%20Play" aria-label="Coming soon on Google Play. Email us to hear when it launches.">
+            <svg class="i tri" style="fill:url(#triGrad);stroke:none"><use href="#i-play"/></svg>
+            <span><small>Coming soon on</small><strong>Google Play</strong></span>
+          </a>
+          <a class="btn-ghost" href="#features">See what's inside <span aria-hidden="true">→</span></a>
+        </div>
+        <p class="android-note">For Android phones and tablets · Track. Plan. Prosper.</p>
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="triGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".5" stop-color="#EC4899"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient></defs></svg>
+      </div>
+
+      <div class="phones reveal" aria-label="FinPiece app screens">
+        <div class="phone p2"><img src="images/06-cards.webp" alt="List of credit cards with limit, amount used and next due date" width="540" height="960"></div>
+        <div class="phone p3"><img src="images/19-fire-plan.webp" alt="FIRE plan showing the money needed to retire early" width="540" height="960"></div>
+        <div class="phone p1"><img src="images/04-dashboard.webp" alt="FinPiece dashboard with Notification dues for a card bill and an insurance premium" width="540" height="960"></div>
+        <div class="tag-float t1"><span class="ic"><svg class="i"><use href="#i-offline"/></svg></span>Works 100% offline</div>
+        <div class="tag-float t2"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span>Never miss a due date</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Stats ===== -->
+  <section class="stats">
+    <div class="wrap">
+      <div class="stats-grid reveal">
+        <div class="stat"><b>100%</b><span>offline · no internet needed</span></div>
+        <div class="stat"><b>0</b><span>servers, accounts or ads</span></div>
+        <div class="stat"><b>13</b><span>languages, incl. 12 Indian</span></div>
+        <div class="stat"><b>30 days</b><span>of the full app free</span></div>
+        <div class="stat"><b>₹99<small style="font-size:.5em">/yr</small></b><span>for Premium, under ₹9 a month</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Features ===== -->
+  <section class="section" id="features">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Everything in one place</span>
+        <h2>One app for <span class="grad-text">every piece</span> of your money</h2>
+        <p>Cards, bills, insurance, expenses, people, tasks, documents and plans. Each part is colourful, simple and built for Indian users.</p>
+      </div>
+
+      <!-- 1 Dashboard -->
+      <article class="feature c-dash">
+        <div class="f-visual reveal"><div class="halo"></div>
+          <div class="phone"><img loading="lazy" src="images/04-dashboard.webp" alt="Dashboard with Notification dues and colourful tiles" width="540" height="960"></div>
+          <div class="phone small"><img loading="lazy" src="images/05-dashboard-dark.webp" alt="Dashboard in dark mode" width="540" height="960"></div>
+        </div>
+        <div class="f-text reveal">
+          <div class="f-icon"><svg class="i"><use href="#i-bell"/></svg></div>
+          <span class="num">01 · DASHBOARD</span>
+          <h3>See what's due, the moment you open it</h3>
+          <p>A glowing <b>Notification dues</b> panel lists every card bill and insurance premium due right now, with a ringing bell, until it is paid.</p>
+          <ul class="ticks">
+            <li>Colourful tiles with the key figure for each part of your money</li>
+            <li>Tap a tile to open it full width; expand or collapse all</li>
+            <li>Light and dark mode with one tap, and your choice is remembered</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2 Cards -->
+      <article class="feature flip c-card">
+        <div class="f-visual reveal"><div class="halo"></div>
+          <div class="phone"><img loading="lazy" src="images/06b-card-details.webp" alt="Card details with the next payment due and progress" width="540" height="960"></div>
+          <div class="phone small left"><img loading="lazy" src="images/06c-payment-log.webp" alt="Payment log with each part-payment and its date" width="540" height="960"></div>
+        </div>
+        <div class="f-text reveal">
+          <div class="f-icon"><svg class="i"><use href="#i-card"/></svg></div>
+          <span class="num">02 · CREDIT CARDS</span>
+          <h3>Credit card bills, under control</h3>
+          <p>Add a card with just a nickname, the bank and the last 4 digits, never the full card number. Then log bills and payments as they happen.</p>
+          <ul class="ticks">
+            <li>Every payment saved with the date paid, the portal or app, and the reference ID</li>
+            <li>Set a utilization limit and earn a <b>monthly win</b> when you stay under it</li>
+            <li>See your credit use on a 12-month trend chart</li>
+            <li>Reminders before each due date until the bill is paid</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 3 Insurance -->
+      <article class="feature c-ins">
+        <div class="f-visual reveal"><div class="halo"></div>
+          <div class="phone"><img loading="lazy" src="images/07-insurance.webp" alt="Insurance policies with renewal countdowns and total cover" width="540" height="960"></div>
+        </div>
+        <div class="f-text reveal">
+          <div class="f-icon"><svg class="i"><use href="#i-shield"/></svg></div>
+          <span class="num">03 · INSURANCE</span>
+          <h3>No policy ever lapses again</h3>
+          <p>Life, term, health, motor and home policies in one place, with a renewal countdown, total cover and yearly premium at a glance.</p>
+          <ul class="ticks">
+            <li>Mark a premium paid, and the policy moves on to its next renewal</li>
+            <li>Premium history with the date, portal and reference ID</li>
+            <li>A renewal reminder for every policy, even two of the same type</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 4 Expenses -->
+      <article class="feature flip c-exp">
+        <div class="f-visual reveal"><div class="halo"></div>
+          <div class="phone"><img loading="lazy" src="images/08-expenses.webp" alt="Expenses grouped by day with time, amount and category" width="540" height="960"></div>
+          <div class="phone small left"><img loading="lazy" src="images/04b-trend.webp" alt="Spending and utilization trend chart" width="540" height="960"></div>
+        </div>
+        <div class="f-text reveal">
+          <div class="f-icon"><svg class="i"><use href="#i-wallet"/></svg></div>
+          <span class="num">04 · MY EXPENSES</span>
+          <h3>Know where every rupee goes</h3>
+          <p>Add a spend in seconds with ready-made categories or your own. FinPiece shows today, this week and this month, plus your top categories.</p>
+          <ul class="ticks">
+            <li>Each expense shows its time and category, grouped by day</li>
+            <li>Filter by date, amount and category</li>
+            <li>A colourful PDF with day totals and graphs by day and month</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 5 Given-got -->
+      <article class="feature c-gg">
+        <div class="f-visual reveal"><div class="halo"></div>
+          <div class="phone"><img loading="lazy" src="images/09b-given-got-person.webp" alt="Given-got page for one person with a running balance" width="540" height="960"></div>
+          <div class="phone small"><img loading="lazy" src="images/09c-given-got-whatsapp.webp" alt="WhatsApp message preview for a Given-got entry" width="540" height="960"></div>
+        </div>
+        <div class="f-text reveal">
+          <div class="f-icon"><svg class="i"><use href="#i-users"/></svg></div>
+          <span class="num">05 · GIVEN-GOT</span>
+          <h3>Money you lend or borrow, remembered</h3>
+          <p>Keep a running balance with every person, so you always know who owes whom.</p>
+          <ul class="ticks">
+            <li>Pick a person from your contacts. FinPiece only gets that one name and number</li>
+            <li>Share an entry and the balance on WhatsApp in one tap</li>
+            <li>Save a person's full statement as a colourful PDF</li>
+            <li>Filter and sort; settled people stay out of the way</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 6 To-Do -->
+      <article class="feature flip c-todo">
+        <div class="f-visual reveal"><div class="halo"></div>
+          <div class="phone"><img loading="lazy" src="images/10-todo.webp" alt="To-Do notebook page with tasks in sections" width="540" height="960"></div>
+        </div>
+        <div class="f-text reveal">
+          <div class="f-icon"><svg class="i"><use href="#i-check"/></svg></div>
+          <span class="num">06 · TO-DO</span>
+          <h3>A notebook page for money tasks</h3>
+          <p>Tap any line to write a task, add a short note and a reminder. Then tick it off when it's done.</p>
+          <ul class="ticks">
+            <li>Your own sections, like Home and Office</li>
+            <li>Reminders that say what is due: "TO-DO: Pay school fees"</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 7 Doc Vault -->
+      <article class="feature c-vault">
+        <div class="f-visual reveal"><div class="halo"></div>
+          <div class="phone"><img loading="lazy" src="images/13-doc-vault.webp" alt="Doc Vault with encrypted notes and files" width="540" height="960"></div>
+          <div class="phone small"><img loading="lazy" src="images/12-doc-vault-unlock.webp" alt="Doc Vault asking for fingerprint or MPIN to unlock" width="540" height="960"></div>
+        </div>
+        <div class="f-text reveal">
+          <div class="f-icon"><svg class="i"><use href="#i-lock"/></svg></div>
+          <span class="num">07 · DOC VAULT</span>
+          <h3>Your papers, locked away</h3>
+          <p>Keep policy papers, bills, IDs and warranties as PDF, Word, Excel or photos, up to 10 MB each.</p>
+          <ul class="ticks">
+            <li>Encrypted on your phone and hidden from your gallery and Files app</li>
+            <li>Opens only with your fingerprint, face unlock or MPIN, every time</li>
+            <li>Search, filter and sort; open or share a file when you need it</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 8 Plans -->
+      <article class="feature flip c-plan">
+        <div class="f-visual reveal"><div class="halo"></div>
+          <div class="phone"><img loading="lazy" src="images/16-health-check.webp" alt="Your Financial Health Check" width="540" height="960"></div>
+          <div class="phone small left"><img loading="lazy" src="images/20-car-plan.webp" alt="Car plan checked against the 20/4/15 rule" width="540" height="960"></div>
+        </div>
+        <div class="f-text reveal">
+          <div class="f-icon"><svg class="i"><use href="#i-chart"/></svg></div>
+          <span class="num">08 · MY FIN STRATEGIES</span>
+          <h3>Plan big money moves with confidence</h3>
+          <p>Simple, guided plans, with an (i) on every field that explains it in plain words.</p>
+          <ul class="ticks">
+            <li><b>Financial Health Check:</b> emergency fund, cover and safe EMI limits in four steps</li>
+            <li><b>50/30/20 budget</b> with easy sliders</li>
+            <li><b>FIRE plan:</b> how much you need to retire early, and the monthly SIP to get there</li>
+            <li><b>Car plan</b> and <b>Rent vs buy</b> before you sign anything</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== And more ===== -->
+  <section class="section more">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">And there's more</span>
+        <h2>Small things that make a <span class="grad-text">big difference</span></h2>
+      </div>
+      <div class="more-grid">
+        <div class="mini reveal"><div class="ic" style="background:linear-gradient(135deg,#FF8A3D,#EC4899)"><svg class="i"><use href="#i-backup"/></svg></div><h3>Backup &amp; new phone</h3><p>One encrypted backup file of everything. Only your recovery key opens it, and FinPiece reminds you to keep it fresh.</p></div>
+        <div class="mini reveal"><div class="ic" style="background:linear-gradient(135deg,#38BDF8,#2563EB)"><svg class="i"><use href="#i-bell"/></svg></div><h3>Smart reminders</h3><p>Clear titles like "CC Bill Due" and "Health Insurance Due". You choose when and how often.</p></div>
+        <div class="mini reveal"><div class="ic" style="background:linear-gradient(135deg,#4ADE80,#15925C)"><svg class="i"><use href="#i-download"/></svg></div><h3>PDF export</h3><p>Pick the sections you want, even Doc Vault files, and get one modern, colourful PDF.</p></div>
+        <div class="mini reveal"><div class="ic" style="background:linear-gradient(135deg,#F472B6,#9333EA)"><svg class="i"><use href="#i-globe"/></svg></div><h3>13 languages</h3><p>English and 12 Indian languages, from Hindi and Marathi to Tamil and Urdu.</p></div>
+        <div class="mini reveal"><div class="ic" style="background:linear-gradient(135deg,#C78D3D,#6B4421)"><svg class="i"><use href="#i-finger"/></svg></div><h3>Fingerprint login</h3><p>Fingerprint, face unlock or MPIN. You choose when FinPiece asks again after you leave it.</p></div>
+        <div class="mini reveal"><div class="ic" style="background:linear-gradient(135deg,#FDBA4D,#F2711C)"><svg class="i"><use href="#i-key"/></svg></div><h3>Recovery key</h3><p>Forgot your MPIN? Your personal recovery key resets it without losing anything.</p></div>
+        <div class="mini reveal"><div class="ic" style="background:linear-gradient(135deg,#6366F1,#312E81)"><svg class="i"><use href="#i-moon"/></svg></div><h3>Dark mode</h3><p>Easy on the eyes at night. Switch with the moon / sun button on every main page.</p></div>
+        <div class="mini reveal"><div class="ic" style="background:linear-gradient(135deg,#FB7185,#BE123C)"><svg class="i"><use href="#i-trash"/></svg></div><h3>You're in charge</h3><p>Delete all your data from inside the app at any time. It's your phone and your data.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Gallery ===== -->
+  <section class="section" style="padding-bottom:56px">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">A peek inside</span>
+        <h2>Made to be <span class="grad-text">a joy to use</span></h2>
+        <p>Real screens from the app. Hover to pause.</p>
+      </div>
+    </div>
+    <div class="gallery" aria-label="App screenshots">
+      <div class="track" id="track">
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/01-launch.webp" alt="FinPiece launch screen" width="540" height="960"></div><figcaption>Welcome</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/04-dashboard.webp" alt="Dashboard" width="540" height="960"></div><figcaption>Dashboard</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/06-cards.webp" alt="Credit cards" width="540" height="960"></div><figcaption>My cards</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/06c-payment-log.webp" alt="Payment log" width="540" height="960"></div><figcaption>Payment log</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/07-insurance.webp" alt="Insurance" width="540" height="960"></div><figcaption>Insurance</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/08-expenses.webp" alt="Expenses" width="540" height="960"></div><figcaption>Expenses</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/09-given-got.webp" alt="Given-got" width="540" height="960"></div><figcaption>Given-got</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/10-todo.webp" alt="To-Do" width="540" height="960"></div><figcaption>To-Do</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/15-doc-vault-dark.webp" alt="Doc Vault in dark mode" width="540" height="960"></div><figcaption>Doc Vault</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/18-budget.webp" alt="50/30/20 budget" width="540" height="960"></div><figcaption>Budget 50/30/20</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/19-fire-plan.webp" alt="FIRE plan" width="540" height="960"></div><figcaption>FIRE plan</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/21-rent-vs-buy.webp" alt="Rent vs buy" width="540" height="960"></div><figcaption>Rent vs buy</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/22-export.webp" alt="Export my data" width="540" height="960"></div><figcaption>PDF export</figcaption></figure>
+        <figure class="shot"><div class="phone"><img loading="lazy" src="images/24-notifications.webp" alt="Notification settings" width="540" height="960"></div><figcaption>Reminders</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Privacy ===== -->
+  <section class="section privacy" id="privacy">
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Private by design</span>
+        <h2>Your data never leaves <span class="grad-text">your phone</span></h2>
+        <p>FinPiece has no server and no online account. We can't see your data, because we never receive it.</p>
+      </div>
+      <div class="priv-grid">
+        <div class="priv reveal"><div class="ic"><svg class="i"><use href="#i-offline"/></svg></div><h3>Fully offline</h3><p>FinPiece doesn't even ask for internet access. Reminders are made on your phone.</p></div>
+        <div class="priv reveal"><div class="ic"><svg class="i"><use href="#i-lock"/></svg></div><h3>Strong encryption</h3><p>Everything is encrypted and unlocked only by your MPIN and your phone's secure hardware.</p></div>
+        <div class="priv reveal"><div class="ic"><svg class="i"><use href="#i-phone"/></svg></div><h3>No sign-up</h3><p>No email, no password, no phone number. Set a 4-digit MPIN and start.</p></div>
+        <div class="priv reveal"><div class="ic"><svg class="i"><use href="#i-card"/></svg></div><h3>Never full card numbers</h3><p>Only a nickname, the bank and the last 4 digits, nothing anyone could misuse.</p></div>
+        <div class="priv reveal"><div class="ic"><svg class="i"><use href="#i-spark"/></svg></div><h3>No ads, no tracking</h3><p>Nothing is sold or shared. Your finances are not a product.</p></div>
+        <div class="priv reveal"><div class="ic"><svg class="i"><use href="#i-key"/></svg></div><h3>You hold the key</h3><p>Your recovery key resets a forgotten MPIN and opens your backup. Only you have it.</p></div>
+      </div>
+      <p class="reveal" style="text-align:center;margin:36px 0 0;position:relative;z-index:1"><a href="https://finpiece.github.io/finpiece_privacy_policy/" style="color:#FF9BC4;font-weight:700">Read the full privacy policy →</a></p>
+    </div>
+  </section>
+
+  <!-- ===== Money tips ===== -->
+  <section class="section tips" id="money-tips">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Money awareness</span>
+        <h2>Smart money rules, <span class="grad-text">made simple</span></h2>
+        <p>Rules of thumb many Indian families use, and FinPiece helps you follow them every day.</p>
+      </div>
+      <div class="disclaimer reveal" role="note">
+        <svg class="i"><use href="#i-info"/></svg>
+        <span><b>(For financial awareness only, not financial advice.)</b> These are general rules of thumb, not recommendations for you. Your situation may differ, so please speak to a SEBI-registered investment adviser before big money decisions.</span>
+      </div>
+      <div class="tip-grid">
+        <div class="tip tg1 reveal"><div class="big">30%</div><h3>Keep card use under 30%</h3><p>Using a large part of your credit limit can pull your credit score down. Try to keep each card's use below about 30% of its limit.</p><span class="inapp">In FinPiece: utilization limit &amp; monthly win</span></div>
+        <div class="tip tg2 reveal"><div class="big">Full</div><h3>Pay the full bill, not the minimum</h3><p>Paying only the "minimum due" leaves the rest on interest that can cost 3–4% a month, often over 40% a year. Late payments also hurt your credit score.</p><span class="inapp">In FinPiece: due-date reminders until paid</span></div>
+        <div class="tip tg3 reveal"><div class="big">6 mo</div><h3>Build an emergency fund</h3><p>Keep about 6 months of expenses in safe, easy-to-reach places for job loss, illness or surprises, before you invest for long-term goals.</p><span class="inapp">In FinPiece: Financial Health Check</span></div>
+        <div class="tip tg4 reveal"><div class="big">10×</div><h3>Term cover of 10× income</h3><p>If your family depends on your income, term life cover of at least 10 times your yearly income (plus loans) is a common starting point.</p><span class="inapp">In FinPiece: cover check in Health Check</span></div>
+        <div class="tip tg5 reveal"><div class="big">50/30/20</div><h3>Split your income</h3><p>A simple start: 50% for needs, 30% for investments and 20% for wants. Adjust it to your life, but keep the investing habit.</p><span class="inapp">In FinPiece: Budget 50/30/20</span></div>
+        <div class="tip tg6 reveal"><div class="big">20/4/15</div><h3>Buying a car?</h3><p>Pay at least 20% down, take the loan for at most 4 years, and keep the EMI within 15% of your monthly income.</p><span class="inapp">In FinPiece: Car plan</span></div>
+        <div class="tip tg7 reveal"><div class="big">≤ 50%</div><h3>Cap all your EMIs</h3><p>Keep all EMIs together within half of your take-home pay, and lower is safer. It leaves room for savings and surprises.</p><span class="inapp">In FinPiece: safe EMI limit</span></div>
+        <div class="tip tg8 reveal"><div class="big">25×</div><h3>Your FIRE number</h3><p>A popular shortcut for retiring early is 25 times your yearly expenses. With India's higher inflation, many people aim for more.</p><span class="inapp">In FinPiece: FIRE plan</span></div>
+        <div class="tip tg9 reveal"><div class="big">72</div><h3>The rule of 72</h3><p>Divide 72 by the yearly return to see roughly how many years money takes to double. At 12% that's about 6 years, and at 6% about 12.</p><span class="inapp">Starting early matters most</span></div>
+      </div>
+      <div class="marquee reveal" aria-hidden="true">
+        <div class="row">
+          <span>Renew insurance before it lapses</span><span>Track every spend, big or small</span><span>Pay card bills in full</span><span>Keep an emergency fund</span><span>Never share your full card number or OTP</span><span>Review your budget every month</span><span>Start investing early</span>
+          <span>Renew insurance before it lapses</span><span>Track every spend, big or small</span><span>Pay card bills in full</span><span>Keep an emergency fund</span><span>Never share your full card number or OTP</span><span>Review your budget every month</span><span>Start investing early</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Pricing ===== -->
+  <section class="section" id="pricing">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Simple pricing</span>
+        <h2>Less than <span class="grad-text">a cup of tea</span> a month</h2>
+        <p>Free to download. Try everything free for 30 days, then choose.</p>
+      </div>
+      <div class="price-grid">
+        <div class="price c-trial reveal">
+          <h3>Free trial</h3>
+          <div class="amt">30 days</div>
+          <p class="sub">The whole app, no limits, for every new account.</p>
+          <ul class="ticks"><li>Every feature unlocked</li><li>Live countdown on the Dashboard</li><li>No card needed to start</li></ul>
+        </div>
+        <div class="price hot reveal">
+          <span class="tagline">Best value</span>
+          <h3>FinPiece Premium</h3>
+          <div class="amt">₹99 <small>/ year</small></div>
+          <p class="sub">About ₹8 a month, or 27 paise a day. Bought and renewed through Google Play.</p>
+          <ul class="ticks"><li>Everything, with no limits</li><li>Reminders, PDF export and all money plans</li><li>Restore your purchase on a new phone</li></ul>
+        </div>
+        <div class="price c-free reveal">
+          <h3>Free plan</h3>
+          <div class="amt">₹0</div>
+          <p class="sub">After the trial, keep the essentials for free.</p>
+          <ul class="ticks"><li>My Expenses without limits</li><li>A few cards, policies, people and notes</li><li>Your Financial Health Check</li><li>Your data is never deleted, only locked</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Languages ===== -->
+  <section class="section" style="padding-top:24px">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Speaks your language</span>
+        <h2>English and <span class="grad-text">12 Indian languages</span></h2>
+      </div>
+      <ul class="langs reveal" aria-label="Supported languages">
+        <li lang="en">English</li><li lang="hi">हिन्दी</li><li lang="mr">मराठी</li><li lang="bn">বাংলা</li><li lang="gu">ગુજરાતી</li>
+        <li lang="ta">தமிழ்</li><li lang="te">తెలుగు</li><li lang="kn">ಕನ್ನಡ</li><li lang="ml">മലയാളം</li><li lang="pa">ਪੰਜਾਬੀ</li>
+        <li lang="or">ଓଡ଼ିଆ</li><li lang="as">অসমীয়া</li><li lang="ur" dir="rtl">اردو</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section" id="faq" style="padding-top:24px">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Questions</span>
+        <h2>Good to <span class="grad-text">know</span></h2>
+      </div>
+      <div class="faq">
+        <details class="reveal"><summary>When can I download FinPiece?</summary><p>FinPiece is coming soon to Google Play for Android phones and tablets. It's in its final review now. Email us and we'll tell you the day it's live.</p></details>
+        <details class="reveal"><summary>Does FinPiece need the internet?</summary><p>No. FinPiece works fully offline and doesn't even ask for internet access. Only Google Play uses the internet, for the Premium subscription.</p></details>
+        <details class="reveal"><summary>Where is my data stored? Can you see it?</summary><p>Only on your phone, encrypted. There is no server and no account, so we never receive your data and can't see it.</p></details>
+        <details class="reveal"><summary>What happens if I change my phone?</summary><p>Make one encrypted backup file in My account › Backup &amp; new phone, and keep it somewhere safe, like Google Drive or email. On the new phone, choose "I have a backup from my old phone", enter your recovery key, and everything comes back. Premium returns through Google Play on the same Google account.</p></details>
+        <details class="reveal"><summary>What if I forget my MPIN?</summary><p>Use your recovery key to set a new MPIN without losing anything. Keep the key safe: it's the only way in.</p></details>
+        <details class="reveal"><summary>Does FinPiece connect to my bank or read my SMS?</summary><p>No. FinPiece never connects to banks and doesn't read SMS. You add bills and payments yourself, which keeps everything private.</p></details>
+        <details class="reveal"><summary>Is FinPiece financial advice?</summary><p>No. FinPiece is a tracking and planning tool, and the money tips on this page are for awareness only. For investment decisions, please speak to a SEBI-registered investment adviser.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Final CTA ===== -->
+  <section class="final">
+    <div class="wrap">
+      <div class="final-card reveal">
+        <span class="ring" style="width:420px;height:420px;left:-140px;top:-160px"></span>
+        <span class="ring" style="width:520px;height:520px;right:-200px;bottom:-260px"></span>
+        <img class="logo" src="images/icon-256.webp" alt="FinPiece app icon" width="84" height="84">
+        <h2>Track. Plan. Prosper.</h2>
+        <p>FinPiece is coming soon to Google Play. Be the first to know when you can bring every piece of your money together.</p>
+        <div class="cta-row">
+          <a class="play-soon" href="mailto:finpiece.win@gmail.com?subject=Tell%20me%20when%20FinPiece%20is%20on%20Google%20Play">
+            <svg class="i tri" style="fill:url(#triGrad);stroke:none"><use href="#i-play"/></svg>
+            <span><small>Coming soon on</small><strong>Google Play</strong></span>
+          </a>
+          <a class="btn-ghost" href="mailto:finpiece.win@gmail.com?subject=Tell%20me%20when%20FinPiece%20is%20on%20Google%20Play"><svg class="i"><use href="#i-mail"/></svg>Email me at launch</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="images/icon-192.png" alt="" width="38" height="38"><span>FinPiece</span></a>
+    <nav aria-label="Footer">
+      <a href="#features">Features</a>
+      <a href="#money-tips">Money tips</a>
+      <a href="https://finpiece.github.io/finpiece_privacy_policy/">Privacy policy</a>
+      <a href="mailto:finpiece.win@gmail.com">finpiece.win@gmail.com</a>
+    </nav>
+    <p class="fine">© 2026 FinPiece. Money tips on this site are for awareness only and are not financial advice. Screens shown use sample data. Google Play is a trademark of Google LLC.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    // Sticky nav border
+    var nav = document.getElementById('nav');
+    var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
+    window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+    // Theme toggle
+    var root = document.documentElement;
+    document.getElementById('themeBtn').addEventListener('click', function () {
+      var cur = root.getAttribute('data-theme') ||
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var next = cur === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('fp-theme', next); } catch (e) {}
+    });
+
+    // Gallery: duplicate once for a seamless loop
+    var track = document.getElementById('track');
+    if (track) {
+      Array.prototype.slice.call(track.children).forEach(function (n) {
+        var c = n.cloneNode(true); c.setAttribute('aria-hidden', 'true');
+        c.querySelectorAll('img').forEach(function (i) { i.alt = ''; });
+        track.appendChild(c);
+      });
+    }
+
+    // Reveal on scroll
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+</body>
+</html>
