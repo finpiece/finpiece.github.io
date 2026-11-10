@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FinPiece – Bills, Cards &amp; Expenses, Only on Your Phone</title>
-<meta name="description" content="FinPiece keeps your credit card bills, insurance premiums, expenses, money lent, To-Dos and documents in one private app. 100% offline and encrypted. Coming soon on Google Play.">
+<meta name="description" content="FinPiece keeps your credit card bills, insurance premiums, expenses, money lent, To-Dos and documents in one private app. 100% offline and encrypted. Now on Google Play.">
 <meta name="theme-color" content="#EC4899">
 <link rel="canonical" href="https://finpiece.github.io/">
 <link rel="icon" type="image/png" href="images/icon-64.png">
 <link rel="apple-touch-icon" href="images/icon-192.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="FinPiece – Your money. Only on your phone.">
-<meta property="og:description" content="Cards, bills, insurance, expenses and money plans in one private, offline app. Coming soon on Google Play.">
+<meta property="og:description" content="Cards, bills, insurance, expenses and money plans in one private, offline app. Now on Google Play.">
 <meta property="og:image" content="https://finpiece.github.io/images/og-image.jpg">
 <meta property="og:url" content="https://finpiece.github.io/">
 <meta name="twitter:card" content="summary_large_image">
@@ -113,6 +113,22 @@
     font-weight: 700; font-size: 14px; text-decoration: none; box-shadow: 0 10px 24px -10px rgba(236, 72, 153, .7);
   }
   @media (min-width: 560px) { .pill-soon { display: inline-flex; } }
+
+  /* ---------- Videos ---------- */
+  .vids { display: grid; gap: 20px; }
+  @media (min-width: 820px) { .vids { grid-template-columns: 1fr 1fr; } }
+  .vid {
+    position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: var(--radius);
+    background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); text-decoration: none; color: var(--ink);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .vid:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .vid .yt { width: 64px; height: 44px; border-radius: 12px; background: #FF0033; display: grid; place-items: center; box-shadow: 0 12px 24px -12px rgba(255, 0, 51, .7); }
+  .vid .yt svg { width: 22px; height: 22px; fill: #fff; stroke: none; margin-left: 3px; }
+  .vid .tagline { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .vid h3 { font-size: 22px; font-weight: 800; margin: 0; }
+  .vid p { margin: 0; color: var(--ink-2); font-size: 16px; }
+  .vid .go { margin-top: auto; font-weight: 700; color: var(--pink); }
 
   /* ---------- Hero ---------- */
   .hero { position: relative; padding: 48px 0 40px; overflow: hidden; }
@@ -390,6 +406,7 @@
     </a>
     <nav class="nav-links" aria-label="Sections">
       <a href="#features">Features</a>
+      <a href="#videos">Videos</a>
       <a href="#privacy">Privacy</a>
       <a href="#money-tips">Money tips</a>
       <a href="#pricing">Pricing</a>
@@ -399,7 +416,7 @@
       <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch light or dark mode">
         <svg class="i moon"><use href="#i-moon"/></svg><svg class="i sun"><use href="#i-sun"/></svg>
       </button>
-      <a class="pill-soon" href="#launch"><svg class="i" style="width:16px;height:16px;fill:#fff;stroke:none"><use href="#i-play"/></svg>Coming soon</a>
+      <a class="pill-soon" href="https://play.google.com/store/apps/details?id=com.finpiece.win" target="_blank" rel="noopener"><svg class="i" style="width:16px;height:16px;fill:#fff;stroke:none"><use href="#i-play"/></svg>Get the app</a>
     </div>
   </div>
 </header>
@@ -411,18 +428,18 @@
     <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
     <div class="wrap hero-grid">
       <div class="reveal">
-        <span class="badge-soon"><span class="dot"><svg class="i" style="width:14px;height:14px;fill:#fff;stroke:none"><use href="#i-play"/></svg></span>Coming soon on Google Play <span class="live" aria-hidden="true"></span></span>
+        <span class="badge-soon"><span class="dot"><svg class="i" style="width:14px;height:14px;fill:#fff;stroke:none"><use href="#i-play"/></svg></span>Now live on Google Play <span class="live" aria-hidden="true"></span></span>
         <h1>Your money.<br><span class="grad-text">Only on</span> <span class="serif grad-text">your phone.</span></h1>
         <p class="lead">FinPiece keeps your credit card bills, insurance premiums, daily expenses, money you lend, To-Dos and important documents in one beautiful app. It is 100% offline and encrypted, with no sign-up and no ads.</p>
         <ul class="chips" aria-label="What FinPiece covers">
           <li>Credit cards</li><li>Insurance</li><li>Expenses</li><li>Given-got</li><li>To-Do &amp; Doc Vault</li><li>Money plans</li>
         </ul>
         <div class="cta-row" id="launch">
-          <a class="play-soon" href="mailto:finpiece.win@gmail.com?subject=Tell%20me%20when%20FinPiece%20is%20on%20Google%20Play" aria-label="Coming soon on Google Play. Email us to hear when it launches.">
+          <a class="play-soon" href="https://play.google.com/store/apps/details?id=com.finpiece.win" target="_blank" rel="noopener" aria-label="Get FinPiece on Google Play">
             <svg class="i tri" style="fill:url(#triGrad);stroke:none"><use href="#i-play"/></svg>
-            <span><small>Coming soon on</small><strong>Google Play</strong></span>
+            <span><small>Get it on</small><strong>Google Play</strong></span>
           </a>
-          <a class="btn-ghost" href="#features">See what's inside <span aria-hidden="true">→</span></a>
+          <a class="btn-ghost" href="#videos">Watch how it works <span aria-hidden="true">→</span></a>
         </div>
         <p class="android-note">For Android phones and tablets · Track. Plan. Prosper.</p>
         <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="triGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset=".5" stop-color="#EC4899"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient></defs></svg>
@@ -663,6 +680,33 @@
     </div>
   </section>
 
+  <!-- ===== Videos ===== -->
+  <section class="section" id="videos" style="padding-top:24px">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Watch</span>
+        <h2>See FinPiece <span class="grad-text">in action</span></h2>
+        <p>Short videos on YouTube: a quick look at the app, and step-by-step guides for every part of it.</p>
+      </div>
+      <div class="vids">
+        <a class="vid reveal" href="https://www.youtube.com/playlist?list=PLLW2fvzM_CEw" target="_blank" rel="noopener">
+          <span class="yt" aria-hidden="true"><svg><use href="#i-play"/></svg></span>
+          <span class="tagline">Promo playlist</span>
+          <h3>FinPiece at a glance</h3>
+          <p>A quick look at cards, bills, insurance, expenses and money plans, all private on your phone.</p>
+          <span class="go">Watch on YouTube →</span>
+        </a>
+        <a class="vid reveal" href="https://www.youtube.com/playlist?list=PLR-U2-kN94wM" target="_blank" rel="noopener">
+          <span class="yt" aria-hidden="true"><svg><use href="#i-play"/></svg></span>
+          <span class="tagline">Tutorials playlist</span>
+          <h3>Step-by-step guides</h3>
+          <p>From setting your MPIN to logging bill payments, Given-got, Doc Vault and backups. One video per part of the app.</p>
+          <span class="go">Watch on YouTube →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== Privacy ===== -->
   <section class="section privacy" id="privacy">
     <div class="blob b1"></div><div class="blob b2"></div>
@@ -771,7 +815,7 @@
         <h2>Good to <span class="grad-text">know</span></h2>
       </div>
       <div class="faq">
-        <details class="reveal"><summary>When can I download FinPiece?</summary><p>FinPiece is coming soon to Google Play for Android phones and tablets. It's in its final review now. Email us and we'll tell you the day it's live.</p></details>
+        <details class="reveal"><summary>Where can I download FinPiece?</summary><p>FinPiece is live on <a href="https://play.google.com/store/apps/details?id=com.finpiece.win" target="_blank" rel="noopener">Google Play</a> for Android phones and tablets. New to it? The <a href="https://www.youtube.com/playlist?list=PLR-U2-kN94wM" target="_blank" rel="noopener">tutorial videos</a> walk you through every part of the app.</p></details>
         <details class="reveal"><summary>Does FinPiece need the internet?</summary><p>No. FinPiece works fully offline and doesn't even ask for internet access. Only Google Play uses the internet, for the Premium subscription.</p></details>
         <details class="reveal"><summary>Where is my data stored? Can you see it?</summary><p>Only on your phone, encrypted. There is no server and no account, so we never receive your data and can't see it.</p></details>
         <details class="reveal"><summary>What happens if I change my phone?</summary><p>Make one encrypted backup file in My account › Backup &amp; new phone, and keep it somewhere safe, like Google Drive or email. On the new phone, choose "I have a backup from my old phone", enter your recovery key, and everything comes back. Premium returns through Google Play on the same Google account.</p></details>
@@ -790,13 +834,13 @@
         <span class="ring" style="width:520px;height:520px;right:-200px;bottom:-260px"></span>
         <img class="logo" src="images/icon-256.webp" alt="FinPiece app icon" width="84" height="84">
         <h2>Track. Plan. Prosper.</h2>
-        <p>FinPiece is coming soon to Google Play. Be the first to know when you can bring every piece of your money together.</p>
+        <p>FinPiece is now on Google Play. Bring every piece of your money together, privately, on your phone.</p>
         <div class="cta-row">
-          <a class="play-soon" href="mailto:finpiece.win@gmail.com?subject=Tell%20me%20when%20FinPiece%20is%20on%20Google%20Play">
+          <a class="play-soon" href="https://play.google.com/store/apps/details?id=com.finpiece.win" target="_blank" rel="noopener" aria-label="Get FinPiece on Google Play">
             <svg class="i tri" style="fill:url(#triGrad);stroke:none"><use href="#i-play"/></svg>
-            <span><small>Coming soon on</small><strong>Google Play</strong></span>
+            <span><small>Get it on</small><strong>Google Play</strong></span>
           </a>
-          <a class="btn-ghost" href="mailto:finpiece.win@gmail.com?subject=Tell%20me%20when%20FinPiece%20is%20on%20Google%20Play"><svg class="i"><use href="#i-mail"/></svg>Email me at launch</a>
+          <a class="btn-ghost" href="https://www.youtube.com/playlist?list=PLR-U2-kN94wM" target="_blank" rel="noopener"><svg class="i"><use href="#i-play"/></svg>Watch the tutorials</a>
         </div>
       </div>
     </div>
@@ -808,11 +852,13 @@
     <a class="brand" href="#top"><img src="images/icon-192.png" alt="" width="38" height="38"><span>FinPiece</span></a>
     <nav aria-label="Footer">
       <a href="#features">Features</a>
+      <a href="#videos">Videos</a>
       <a href="#money-tips">Money tips</a>
+      <a href="https://play.google.com/store/apps/details?id=com.finpiece.win" target="_blank" rel="noopener">Google Play</a>
       <a href="https://finpiece.github.io/finpiece_privacy_policy/">Privacy policy</a>
       <a href="mailto:finpiece.win@gmail.com">finpiece.win@gmail.com</a>
     </nav>
-    <p class="fine">© 2026 FinPiece. Money tips on this site are for awareness only and are not financial advice. Screens shown use sample data. Google Play is a trademark of Google LLC.</p>
+    <p class="fine">© 2026 FinPiece. Money tips on this site are for awareness only and are not financial advice. Screens shown use sample data. Google Play and YouTube are trademarks of Google LLC.</p>
   </div>
 </footer>
 
