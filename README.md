@@ -1,22 +1,52 @@
-# FinPiece website (coming-soon page)
+# FinPiece website
 
-One page, `index.html`, plus `images/` (WebP copies of `appScreenshots/`, the icon and the feature graphic as the share image).
-Features shown are those of v2.3.1. Google Play only, no iPhone.
+The website of **FinPiece: Bills & Expenses**, a private money app for Android that works fully offline.
+Live at **https://finpiece.github.io/**
 
-## Publish on GitHub Pages (https://finpiece.github.io/)
+**FinPiece is live on Google Play** (since 10 November 2026):
+https://play.google.com/store/apps/details?id=com.finpiece.win
 
-1. On GitHub, signed in to the account that owns `finpiece_privacy_policy`, create a **public** repository named exactly
-   `finpiece.github.io`.
-2. Upload `index.html` and the whole `images/` folder (keep the folder name) to the repository root and commit.
-3. Settings › Pages: Source = "Deploy from a branch", branch `main`, folder `/ (root)`. The site is live in about a minute.
-4. The privacy policy keeps its own address: https://finpiece.github.io/finpiece_privacy_policy/
+## What is on the page
 
-## When FinPiece is live on Google Play
+One page (`index.html`) plus `images/` (app screenshots as WebP, the app icon and the share image):
 
-Replace the two "Coming soon on Google Play" buttons (hero and the last section) with a link to
-`https://play.google.com/store/apps/details?id=com.finpiece.win`, and change "coming soon" wording in the badge, the nav pill,
-the FAQ "When can I download FinPiece?" and the final section.
+- what FinPiece does: credit card bills, insurance, expenses, Given-got, To-Do, Doc Vault and money plans
+- privacy: 100% offline, encrypted on the phone, no sign-up, no ads, no tracking
+- money tips (for financial awareness only, not financial advice), pricing, languages and FAQ
+- videos on YouTube
+
+## Links
+
+| What | Link |
+|---|---|
+| Google Play | https://play.google.com/store/apps/details?id=com.finpiece.win |
+| Promo videos (YouTube playlist) | https://www.youtube.com/playlist?list=PLLW2fvzM_CEw |
+| Tutorials (YouTube playlist) | https://www.youtube.com/playlist?list=PLR-U2-kN94wM |
+| Privacy policy | https://finpiece.github.io/finpiece_privacy_policy/ |
+| Delete your data | https://finpiece.github.io/finpiece_privacy_policy/#keeping-and-deleting-your-data |
+| Contact | finpiece.win@gmail.com |
+
+The privacy policy lives in its own repository (`finpiece_privacy_policy`), so its address never changes.
+
+## How the site is published
+
+GitHub Pages: Settings › Pages › "Deploy from a branch", branch `main`, folder `/ (root)`. Every commit to `main` is live in
+about a minute.
+
+To update it: upload the new `index.html` at https://github.com/finpiece/finpiece.github.io/upload/main and new or changed
+images at https://github.com/finpiece/finpiece.github.io/upload/main/images (select the files, not the folder), then
+**Commit changes**.
 
 ## Preview locally
 
 `python -m http.server 8765 --bind 127.0.0.1` inside this folder, then open http://127.0.0.1:8765/
+
+## History
+
+- **3 Nov 2026**: first "coming soon" page.
+- **10 Nov 2026**: FinPiece live on Google Play. Play Store links everywhere, plus a Videos section with the promo and
+  tutorial playlists.
+
+---
+
+© 2026 FinPiece. Google Play and YouTube are trademarks of Google LLC.
